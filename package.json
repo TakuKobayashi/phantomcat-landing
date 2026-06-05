@@ -1,0 +1,17 @@
+{
+  "name": "phantom-cat-monorepo",
+  "private": true,
+  "version": "0.0.1",
+  "packageManager": "pnpm@10.11.0",
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:server": "pnpm --filter server dev",
+    "build:web": "pnpm --filter web build",
+    "build:server": "pnpm --filter server build",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md,css}\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,css}\" --ignore-path .gitignore"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}

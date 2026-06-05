@@ -1,0 +1,197 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.keyArt {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.keyArtOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(13, 11, 26, 0.3) 0%,
+    rgba(13, 11, 26, 0.1) 30%,
+    rgba(13, 11, 26, 0.55) 65%,
+    rgba(13, 11, 26, 0.95) 100%
+  );
+}
+
+/* Stars */
+.stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  background: var(--color-white);
+  border-radius: 50%;
+  animation: twinkle var(--dur, 3s) ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+/* Content */
+.content {
+  position: relative;
+  z-index: 2;
+  padding-top: 8rem;
+  padding-bottom: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 780px;
+}
+
+.eyebrow {
+  color: var(--color-teal) !important;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.9;
+}
+
+.titleNight {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  color: var(--color-white);
+  opacity: 0.85;
+  letter-spacing: 0.1em;
+}
+
+.titlePhantom {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 13vw, 10rem);
+  color: var(--color-white);
+  letter-spacing: 0.02em;
+  text-shadow:
+    0 0 40px rgba(192, 25, 42, 0.5),
+    0 0 80px rgba(192, 25, 42, 0.2);
+  line-height: 0.85;
+}
+
+.titleCat {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 13vw, 10rem);
+  color: var(--color-crimson-bright);
+  letter-spacing: 0.02em;
+  text-shadow: var(--shadow-glow-crimson);
+  line-height: 0.85;
+}
+
+.catch {
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: rgba(244, 241, 255, 0.85);
+  line-height: 1.8;
+  max-width: 480px;
+}
+
+.catch strong {
+  color: var(--color-white);
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.btnMain {
+  font-size: 0.9rem;
+  padding: 0.85rem 1.75rem;
+}
+
+.btnSub {
+  font-size: 0.9rem;
+  padding: 0.85rem 1.75rem;
+}
+
+.platforms {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.platformTag {
+  border-color: rgba(244, 241, 255, 0.2);
+  color: rgba(244, 241, 255, 0.5);
+  font-size: 0.65rem;
+}
+
+/* Scroll indicator */
+.scrollIndicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 50px;
+  background: linear-gradient(to bottom, transparent, var(--color-teal));
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  51% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+.scrollLabel {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  opacity: 0.6;
+}
+
+@media (max-width: 600px) {
+  .titlePhantom,
+  .titleCat {
+    font-size: clamp(3.5rem, 18vw, 6rem);
+  }
+}

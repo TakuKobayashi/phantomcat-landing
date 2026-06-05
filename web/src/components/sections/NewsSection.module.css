@@ -1,0 +1,147 @@
+.news {
+  padding: var(--section-pad) 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  color: var(--color-white);
+}
+
+.viewAll {
+  font-size: 0.85rem;
+  padding: 0.6rem 1.25rem;
+  white-space: nowrap;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 4rem 2rem;
+  text-align: center;
+  border: 1px dashed var(--color-border);
+  border-radius: 8px;
+}
+
+.empty p {
+  color: var(--color-muted);
+  font-size: 1rem;
+}
+
+.list {
+  display: grid;
+  gap: 1rem;
+}
+
+.item {
+  padding: 1.75rem 2rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 0.5rem 1.5rem;
+  align-items: start;
+  text-decoration: none;
+  transition:
+    border-color 0.25s,
+    transform 0.25s var(--ease-snappy);
+}
+
+.item:hover {
+  border-color: rgba(78, 205, 196, 0.35);
+  transform: translateX(6px);
+}
+
+.itemMeta {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 140px;
+}
+
+.date {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-muted);
+  letter-spacing: 0.05em;
+}
+
+.tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.itemTitle {
+  grid-column: 2;
+  grid-row: 1;
+  font-family: var(--font-ui);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-white);
+  line-height: 1.4;
+}
+
+.excerpt {
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  line-height: 1.65;
+}
+
+.readMore {
+  grid-column: 3;
+  grid-row: 1;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: var(--color-teal);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.item:hover .readMore {
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .item {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+
+  .itemMeta {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .itemTitle {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .excerpt {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .readMore {
+    grid-column: 1;
+    grid-row: 4;
+    opacity: 1;
+  }
+}
