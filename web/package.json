@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && opennextjs-cloudflare build",
-    "preview": "next build && opennextjs-cloudflare build && wrangler dev",
+    "build": "next build",
+    "build:cf": "opennextjs-cloudflare build",
+    "preview": "next build && opennextjs-cloudflare build && wrangler dev --no-build",
     "deploy": "next build && opennextjs-cloudflare build && wrangler deploy"
   },
   "dependencies": {
