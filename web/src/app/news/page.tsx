@@ -2,30 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import type { NewsItem } from "@/types/news";
+import { newsItems } from "@/lib/news-data";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "お知らせ",
   description: "Night of the Phantom Cat の最新情報・開発日誌をお届けします。",
 };
-
-async function getAllNews(): Promise<Omit<NewsItem, "content">[]> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/news?limit=50`, {
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) throw new Error("fetch failed");
-    const data = await res.json();
-    return data.items ?? [];
-  } catch {
-    const { newsItems } = await import("@/api/data");
-    return newsItems
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .map(({ content: _content, ...rest }) => rest);
-  }
-}
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("ja-JP", {
@@ -35,8 +18,10 @@ function formatDate(dateStr: string) {
   });
 }
 
-export default async function NewsListPage() {
-  const news = await getAllNews();
+export default function NewsListPage() {
+  const news = [...newsItems].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
 
   return (
     <>

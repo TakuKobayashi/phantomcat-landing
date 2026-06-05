@@ -1,27 +1,6 @@
 import Link from "next/link";
 import styles from "./NewsSection.module.css";
-import type { NewsItem } from "@/types/news";
-
-async function getNews(): Promise<Omit<NewsItem, "content">[]> {
-  // 本番: 同一Worker内のHonoが /api/news を処理
-  // 開発: next dev では別途 API が必要なため、data.ts から直接インポートしてフォールバック
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/news?limit=3`, {
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) throw new Error("fetch failed");
-    const data = await res.json();
-    return data.items ?? [];
-  } catch {
-    // 開発時フォールバック: データを直接インポート
-    const { newsItems } = await import("@/api/data");
-    return newsItems
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 3)
-      .map(({ content: _content, ...rest }) => rest);
-  }
-}
+import { newsItems } from "@/lib/news-data";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("ja-JP", {
@@ -31,8 +10,11 @@ function formatDate(dateStr: string) {
   });
 }
 
-export default async function NewsSection() {
-  const news = await getNews();
+export default function NewsSection() {
+  const news = [...newsItems]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3)
+    .map(({ content: _content, ...rest }) => rest);
 
   return (
     <section id="news" className={styles.news}>

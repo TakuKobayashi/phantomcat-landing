@@ -3,21 +3,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import type { NewsItem } from "@/types/news";
+import { newsItems } from "@/lib/news-data";
 import styles from "./page.module.css";
 
-async function getArticle(slug: string): Promise<NewsItem | null> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/news/${slug}`, {
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) throw new Error("not found");
-    return res.json();
-  } catch {
-    const { newsItems } = await import("@/api/data");
-    return newsItems.find((n) => n.slug === slug) ?? null;
-  }
+export async function generateStaticParams() {
+  return newsItems.map((item) => ({ slug: item.slug }));
 }
 
 export async function generateMetadata({
@@ -26,7 +16,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const article = await getArticle(slug);
+  const article = newsItems.find((n) => n.slug === slug);
   if (!article) return { title: "記事が見つかりません" };
   return {
     title: article.title,
@@ -68,7 +58,7 @@ export default async function NewsArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = await getArticle(slug);
+  const article = newsItems.find((n) => n.slug === slug);
   if (!article) notFound();
 
   const contentHtml = renderMarkdown(article.content);
