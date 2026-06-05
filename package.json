@@ -1,8 +1,7 @@
 {
-  "name": "phantom-cat-monorepo",
+  "name": "phantomcat-landing",
   "private": true,
   "version": "0.0.1",
-  "packageManager": "pnpm@10.11.0",
   "scripts": {
     "dev": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
