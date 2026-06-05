@@ -4,10 +4,10 @@
   "version": "0.0.1",
   "packageManager": "pnpm@10.11.0",
   "scripts": {
-    "dev:web": "pnpm --filter web dev",
-    "dev:server": "pnpm --filter server dev",
-    "build:web": "pnpm --filter web build",
-    "build:server": "pnpm --filter server build",
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "preview": "pnpm --filter web preview",
+    "deploy": "pnpm --filter web deploy",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md,css}\" --ignore-path .gitignore",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,css}\" --ignore-path .gitignore"
   },

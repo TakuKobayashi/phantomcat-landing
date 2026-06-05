@@ -11,16 +11,19 @@ export const metadata: Metadata = {
 };
 
 async function getAllNews(): Promise<Omit<NewsItem, "content">[]> {
-  const baseUrl = process.env.API_BASE_URL || "http://localhost:8787";
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
     const res = await fetch(`${baseUrl}/api/news?limit=50`, {
       next: { revalidate: 300 },
     });
-    if (!res.ok) return [];
+    if (!res.ok) throw new Error("fetch failed");
     const data = await res.json();
     return data.items ?? [];
   } catch {
-    return [];
+    const { newsItems } = await import("@/api/data");
+    return newsItems
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .map(({ content: _content, ...rest }) => rest);
   }
 }
 
@@ -47,7 +50,6 @@ export default async function NewsListPage() {
             <p className="section-eyebrow">News</p>
             <h1 className={`section-title ${styles.title}`}>お知らせ</h1>
           </div>
-
           <div className={styles.list}>
             {news.length === 0 ? (
               <p className={styles.empty}>近日公開予定です。しばらくお待ちください。</p>

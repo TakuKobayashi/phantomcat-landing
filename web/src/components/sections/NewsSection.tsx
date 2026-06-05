@@ -3,16 +3,23 @@ import styles from "./NewsSection.module.css";
 import type { NewsItem } from "@/types/news";
 
 async function getNews(): Promise<Omit<NewsItem, "content">[]> {
-  const baseUrl = process.env.API_BASE_URL || "http://localhost:8787";
+  // 本番: 同一Worker内のHonoが /api/news を処理
+  // 開発: next dev では別途 API が必要なため、data.ts から直接インポートしてフォールバック
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
     const res = await fetch(`${baseUrl}/api/news?limit=3`, {
       next: { revalidate: 300 },
     });
-    if (!res.ok) return [];
+    if (!res.ok) throw new Error("fetch failed");
     const data = await res.json();
     return data.items ?? [];
   } catch {
-    return [];
+    // 開発時フォールバック: データを直接インポート
+    const { newsItems } = await import("@/api/data");
+    return newsItems
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 3)
+      .map(({ content: _content, ...rest }) => rest);
   }
 }
 
@@ -54,7 +61,7 @@ export default async function NewsSection() {
           </div>
         ) : (
           <div className={styles.list}>
-            {news.map((item, i) => (
+            {news.map((item) => (
               <Link key={item.slug} href={`/news/${item.slug}`} className={`card ${styles.item}`}>
                 <div className={styles.itemMeta}>
                   <time className={styles.date} dateTime={item.date}>
@@ -62,7 +69,7 @@ export default async function NewsSection() {
                   </time>
                   <div className={styles.tags}>
                     {item.tags.map((tag) => (
-                      <span key={tag} className={`tag tag-teal`}>
+                      <span key={tag} className="tag tag-teal">
                         {tag}
                       </span>
                     ))}

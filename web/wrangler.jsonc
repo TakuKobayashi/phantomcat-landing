@@ -1,8 +1,12 @@
 {
-  "name": "phantom-cat-web",
-  "main": ".open-next/worker.js",
+  "name": "phantom-cat",
+  // カスタムエントリーポイント: Hono + Next.js を1つのWorkerで配信
+  "main": "worker.ts",
   "compatibility_date": "2025-06-01",
   "compatibility_flags": ["nodejs_compat"],
+  // worker.ts のTypeScript設定 (Cloudflare Workers types)
+  "tsconfig": "tsconfig.worker.json",
+  // Next.js の静的アセット (.open-next/assets) を同一Workerで配信
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"

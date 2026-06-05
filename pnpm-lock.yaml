@@ -12,27 +12,14 @@ importers:
         specifier: ^3.5.3
         version: 3.8.3
 
-  server:
-    dependencies:
-      hono:
-        specifier: ^4.12.23
-        version: 4.12.23
-    devDependencies:
-      '@cloudflare/workers-types':
-        specifier: ^4.20250525.0
-        version: 4.20260605.1
-      typescript:
-        specifier: ^5.8.3
-        version: 5.9.3
-      wrangler:
-        specifier: ^4.98.0
-        version: 4.98.0(@cloudflare/workers-types@4.20260605.1)
-
   web:
     dependencies:
       '@opennextjs/cloudflare':
         specifier: ^1.19.11
         version: 1.19.11(next@16.2.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(wrangler@4.98.0(@cloudflare/workers-types@4.20260605.1))
+      hono:
+        specifier: ^4.12.23
+        version: 4.12.23
       motion:
         specifier: ^12.40.0
         version: 12.40.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

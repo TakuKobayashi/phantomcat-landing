@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { newsItems } from "../data/news";
+import { newsItems } from "./data";
 
 const newsRouter = new Hono();
 

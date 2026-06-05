@@ -1,9 +1,0 @@
-{
-  "name": "phantom-cat-server",
-  "main": "src/index.ts",
-  "compatibility_date": "2025-06-01",
-  "compatibility_flags": ["nodejs_compat"],
-  "routes": [
-    { "pattern": "/*", "zone_name": "your-domain.com" }
-  ]
-}

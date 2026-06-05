@@ -6,17 +6,17 @@ import Footer from "@/components/layout/Footer";
 import type { NewsItem } from "@/types/news";
 import styles from "./page.module.css";
 
-const BASE_URL = process.env.API_BASE_URL || "http://localhost:8787";
-
 async function getArticle(slug: string): Promise<NewsItem | null> {
   try {
-    const res = await fetch(`${BASE_URL}/api/news/${slug}`, {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+    const res = await fetch(`${baseUrl}/api/news/${slug}`, {
       next: { revalidate: 300 },
     });
-    if (!res.ok) return null;
+    if (!res.ok) throw new Error("not found");
     return res.json();
   } catch {
-    return null;
+    const { newsItems } = await import("@/api/data");
+    return newsItems.find((n) => n.slug === slug) ?? null;
   }
 }
 
@@ -28,7 +28,6 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = await getArticle(slug);
   if (!article) return { title: "記事が見つかりません" };
-
   return {
     title: article.title,
     description: article.excerpt,
@@ -50,7 +49,6 @@ function formatDate(dateStr: string) {
   });
 }
 
-// Simple markdown-to-HTML renderer (headings, bold, paragraphs)
 function renderMarkdown(md: string): string {
   return md
     .split("\n\n")
@@ -83,7 +81,6 @@ export default async function NewsArticlePage({
           <Link href="/news" className={styles.back}>
             ← お知らせ一覧へ
           </Link>
-
           <article className={styles.article}>
             <header className={styles.articleHead}>
               <div className={styles.meta}>
@@ -99,15 +96,9 @@ export default async function NewsArticlePage({
               <h1 className={styles.title}>{article.title}</h1>
               <p className={styles.lead}>{article.excerpt}</p>
             </header>
-
             <div className={styles.divider} />
-
-            <div
-              className={styles.body}
-              dangerouslySetInnerHTML={{ __html: contentHtml }}
-            />
+            <div className={styles.body} dangerouslySetInnerHTML={{ __html: contentHtml }} />
           </article>
-
           <div className={styles.share}>
             <span className={styles.shareLabel}>Share</span>
             <a
