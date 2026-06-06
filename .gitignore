@@ -1,13 +1,25 @@
+# Dependencies
 node_modules
 .pnpm-store
+
+# Build outputs
 web/.next
 web/out
+worker/.wrangler
+
+# Auto-generated (do not edit directly)
+web/src/lib/news-data.ts
 web/src/lib/news-slugs.json
-.wrangler
-.dev.vars
+worker/src/generated/
+
+# Environment
 .env
 .env.local
 .env.*.local
+
+# OS
 .DS_Store
 Thumbs.db
+
+# Logs
 *.log

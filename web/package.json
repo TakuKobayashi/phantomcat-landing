@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/generate-news-slugs.mjs && next build && node scripts/generate-sitemap.mjs && node scripts/convert-to-webp.mjs"
+    "generate:content": "tsx scripts/generate-content.ts",
+    "generate:sitemap": "tsx scripts/generate-sitemap.ts",
+    "convert:images": "tsx scripts/convert-to-webp.ts",
+    "build": "pnpm generate:content && next build && pnpm generate:sitemap && pnpm convert:images"
   },
   "dependencies": {
     "motion": "^12.40.0",
@@ -17,6 +20,7 @@
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
     "sharp": "^0.34.5",
+    "tsx": "^4.20.3",
     "typescript": "^6.0.3"
   }
 }

@@ -4,30 +4,38 @@
 
 ```
 Cloudflare Workers (1プロジェクト)
-├── /api/*   → Hono (worker/src/)
-└── /*       → Next.js SSG 静的ファイル (web/out/) ← Wrangler Assets
+├── /api/*  → Hono  (worker/src/)
+└── /*      → Next.js SSG 静的ファイル (web/out/) ← Wrangler Assets
 ```
 
-## 構成
+## ディレクトリ構成
 
 ```
 phantomcat-landing/
-├── web/                          # Next.js SSG
+├── content/
+│   ├── news/              ★ 記事はここに .md ファイルを追加するだけ
+│   │   ├── game-announcement.md
+│   │   └── dev-log-01.md
+│   └── parse.ts           共通 frontmatter パーサー
+├── web/                   Next.js SSG
+│   ├── scripts/           ビルドスクリプト（tsx で実行）
+│   │   ├── generate-content.ts   → src/lib/news-data.ts + news-slugs.json 生成
+│   │   ├── generate-sitemap.ts   → out/sitemap.xml 生成
+│   │   └── convert-to-webp.ts    → out/ 内画像を WebP 変換
 │   ├── src/
-│   │   ├── app/                  # ページ (/, /news, /news/[slug])
-│   │   ├── components/           # Header, Footer, sections
-│   │   ├── lib/news-data.ts      # 記事データ（ここに追記してデプロイ）
-│   │   └── styles/globals.css
-│   ├── scripts/
-│   │   ├── generate-news-slugs.mjs   # sitemap用スラッグJSON生成
-│   │   ├── generate-sitemap.mjs      # out/sitemap.xml 生成
-│   │   └── convert-to-webp.mjs       # out/ 内の画像をWebP変換
-│   └── out/                      # ビルド成果物 (git ignore)
-└── worker/                       # Cloudflare Workers (Hono)
+│   │   ├── lib/
+│   │   │   ├── news-data.ts      ※自動生成・編集禁止
+│   │   │   └── news-slugs.json   ※自動生成・編集禁止
+│   │   └── ...
+│   └── out/               ビルド成果物（gitignore）
+└── worker/                Cloudflare Workers + Hono
+    ├── scripts/
+    │   └── generate-content.ts   → src/generated/news-data.ts 生成
     ├── src/
-    │   ├── index.ts              # /api/* → Hono, /* → Assets
-    │   ├── data.ts               # APIのデータ（web/lib/news-data.tsと同期）
-    │   └── routes/news.ts        # GET /api/news, /api/news/:slug
+    │   ├── generated/
+    │   │   └── news-data.ts      ※自動生成・編集禁止
+    │   ├── index.ts
+    │   └── routes/news.ts
     └── wrangler.jsonc
 ```
 
@@ -41,31 +49,46 @@ pnpm install
 
 ```bash
 pnpm dev        # Next.js dev server → http://localhost:3000
-                # APIは使えない（Honoはwrangler dev経由のみ）
 ```
 
-## プレビュー（本番相当の動作確認）
+## プレビュー（本番相当）
 
 ```bash
-pnpm preview    # next build → wrangler dev → http://localhost:8787
-                # /api/* も静的ファイルも1つのWorkerで動作確認できる
+pnpm preview    # next build + wrangler dev → http://localhost:8787
 ```
 
 ## デプロイ
 
 ```bash
-pnpm deploy     # next build → wrangler deploy
+pnpm deploy
 ```
 
 ## 記事の追加方法
 
-1. `web/src/lib/news-data.ts` に記事を追記
-2. `worker/src/data.ts` にも同じ記事を追記（APIデータと同期）
-3. `pnpm deploy`
+1. `content/news/your-slug.md` を作成（frontmatter 形式）
+2. `pnpm deploy`
 
-## 環境変数
+```markdown
+---
+slug: your-slug
+title: 記事タイトル
+date: 2025-06-01
+tags:
+  - お知らせ
+excerpt: 記事の概要
+---
 
-`web/.env.local` に設定（任意）:
+本文を Markdown で書く
 ```
-NEXT_PUBLIC_BASE_URL=https://your-domain.com
+
+## 各スクリプト単体実行
+
+```bash
+# web/ 内のスクリプト
+pnpm --filter web generate:content   # MD → news-data.ts 生成
+pnpm --filter web generate:sitemap   # out/sitemap.xml 生成
+pnpm --filter web convert:images     # 画像 → WebP 変換
+
+# worker/ 内のスクリプト
+pnpm --filter phantomcat-landing-worker generate:content  # MD → generated/news-data.ts 生成
 ```

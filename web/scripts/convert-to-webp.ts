@@ -1,19 +1,18 @@
 /**
- * next build 後に out/ 内の jpg/png を WebP に変換するスクリプト
+ * next build 後に out/ 内の jpg/jpeg/png を WebP に変換する
  * 元ファイルは残しつつ .webp を追加生成する
+ *
+ * 実行: tsx scripts/convert-to-webp.ts
  */
-import { readdir, readFile, writeFile } from "fs/promises";
-import { join, extname, basename } from "path";
-import { createRequire } from "module";
-
-const require = createRequire(import.meta.url);
-const sharp = require("sharp");
+import { readdir } from "fs/promises";
+import { join, extname } from "path";
+import sharp from "sharp";
 
 const OUT_DIR = join(process.cwd(), "out");
 
-async function findImages(dir) {
+async function findImages(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
-  const files = [];
+  const files: string[] = [];
   for (const entry of entries) {
     const fullPath = join(dir, entry.name);
     if (entry.isDirectory()) {
@@ -37,7 +36,7 @@ async function main() {
       count++;
       console.log(`  ✓ ${webpPath.replace(OUT_DIR, "")}`);
     } catch (err) {
-      console.warn(`  ✗ Failed: ${imgPath}`, err.message);
+      console.warn(`  ✗ Failed: ${imgPath}`, (err as Error).message);
     }
   }
   console.log(`✅ Converted ${count} image(s) to WebP.`);

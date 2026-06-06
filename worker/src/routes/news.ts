@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { newsItems } from "../data";
+import { newsItems } from "../generated/news-data";
 
 const newsRouter = new Hono();
 
