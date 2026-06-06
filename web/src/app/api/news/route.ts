@@ -1,12 +1,14 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { Hono } from "hono";
+import { handle } from "hono/vercel";
 import { newsItems } from "@/lib/news-data";
 
 export const runtime = "edge";
 
-export function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const page = Number(searchParams.get("page") ?? "1");
-  const limit = Number(searchParams.get("limit") ?? "10");
+const app = new Hono().basePath("/api/news");
+
+app.get("/", (c) => {
+  const page = Number(c.req.query("page") ?? "1");
+  const limit = Number(c.req.query("limit") ?? "10");
   const offset = (page - 1) * limit;
 
   const items = [...newsItems]
@@ -14,5 +16,7 @@ export function GET(request: NextRequest) {
     .slice(offset, offset + limit)
     .map(({ content: _content, ...rest }) => rest);
 
-  return NextResponse.json({ items, total: newsItems.length });
-}
+  return c.json({ items, total: newsItems.length });
+});
+
+export const GET = handle(app);

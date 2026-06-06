@@ -8,7 +8,8 @@
     "preview": "pnpm --filter web preview",
     "deploy": "pnpm --filter web deploy",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md,css}\" --ignore-path .gitignore",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,css}\" --ignore-path .gitignore"
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,css}\" --ignore-path .gitignore",
+    "prepare": "pnpm approve-builds --all"
   },
   "devDependencies": {
     "prettier": "^3.8.3"
