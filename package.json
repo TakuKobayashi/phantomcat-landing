@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
-    "preview": "pnpm --filter web preview",
-    "deploy": "pnpm --filter web deploy",
+    "preview": "pnpm --filter web build && pnpm --filter worker dev",
+    "deploy": "pnpm --filter web build && pnpm --filter worker deploy",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md,css}\" --ignore-path .gitignore",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,css}\" --ignore-path .gitignore",
     "prepare": "pnpm approve-builds --all"

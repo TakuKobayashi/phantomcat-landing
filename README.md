@@ -1,50 +1,39 @@
 # Night of the Phantom Cat — Official Website
 
-対戦型追いかけっこゲーム「Night of the Phantom Cat」公式サイトのモノレポです。
-
 ## アーキテクチャ
 
 ```
-1つの Cloudflare Worker で全て配信
-┌─────────────────────────────────┐
-│  worker.ts (カスタムエントリ)     │
-│                                 │
-│  /api/* ──→ Hono (src/api/)     │
-│  それ以外 ──→ Next.js (OpenNext) │
-│                                 │
-│  静的アセット: .open-next/assets │
-└─────────────────────────────────┘
+Cloudflare Workers (1プロジェクト)
+├── /api/*   → Hono (worker/src/)
+└── /*       → Next.js SSG 静的ファイル (web/out/) ← Wrangler Assets
 ```
 
 ## 構成
 
 ```
-phantom-cat/
-└── web/
-    ├── worker.ts              # Cloudflare Worker エントリーポイント
-    ├── wrangler.jsonc         # Wrangler 設定
-    ├── open-next.config.ts    # OpenNext 設定
-    ├── next.config.ts         # Next.js 設定
-    └── src/
-        ├── api/               # Hono APIルート & データ
-        │   ├── news.ts        # GET /api/news, /api/news/:slug
-        │   └── data.ts        # ニュース記事データ (Markdown)
-        ├── app/               # Next.js App Router
-        │   ├── page.tsx       # トップページ
-        │   ├── news/          # お知らせ一覧 / 記事詳細
-        │   ├── sitemap.ts
-        │   └── robots.ts
-        ├── components/
-        │   ├── layout/        # Header, Footer
-        │   └── sections/      # Hero, About, Features, News, Wishlist
-        ├── styles/globals.css # デザインシステム
-        └── types/news.ts
+phantomcat-landing/
+├── web/                          # Next.js SSG
+│   ├── src/
+│   │   ├── app/                  # ページ (/, /news, /news/[slug])
+│   │   ├── components/           # Header, Footer, sections
+│   │   ├── lib/news-data.ts      # 記事データ（ここに追記してデプロイ）
+│   │   └── styles/globals.css
+│   ├── scripts/
+│   │   ├── generate-news-slugs.mjs   # sitemap用スラッグJSON生成
+│   │   ├── generate-sitemap.mjs      # out/sitemap.xml 生成
+│   │   └── convert-to-webp.mjs       # out/ 内の画像をWebP変換
+│   └── out/                      # ビルド成果物 (git ignore)
+└── worker/                       # Cloudflare Workers (Hono)
+    ├── src/
+    │   ├── index.ts              # /api/* → Hono, /* → Assets
+    │   ├── data.ts               # APIのデータ（web/lib/news-data.tsと同期）
+    │   └── routes/news.ts        # GET /api/news, /api/news/:slug
+    └── wrangler.jsonc
 ```
 
 ## セットアップ
 
 ```bash
-# Node.js 20+ / pnpm 10+ が必要
 pnpm install
 ```
 
@@ -52,33 +41,31 @@ pnpm install
 
 ```bash
 pnpm dev        # Next.js dev server → http://localhost:3000
-                # ※ 開発時は API フォールバック (data.ts 直接読み込み) を使用
+                # APIは使えない（Honoはwrangler dev経由のみ）
 ```
 
-## ビルド & プレビュー
+## プレビュー（本番相当の動作確認）
 
 ```bash
-pnpm preview    # next build → opennextjs build → wrangler dev
-                # 本番と同じ Worker ランタイムでローカル確認
+pnpm preview    # next build → wrangler dev → http://localhost:8787
+                # /api/* も静的ファイルも1つのWorkerで動作確認できる
 ```
 
 ## デプロイ
 
 ```bash
-pnpm deploy     # next build → opennextjs build → wrangler deploy
+pnpm deploy     # next build → wrangler deploy
 ```
+
+## 記事の追加方法
+
+1. `web/src/lib/news-data.ts` に記事を追記
+2. `worker/src/data.ts` にも同じ記事を追記（APIデータと同期）
+3. `pnpm deploy`
 
 ## 環境変数
 
-| 変数 | 説明 | デフォルト |
-|------|------|-----------|
-| `NEXT_PUBLIC_BASE_URL` | 本番ドメイン | `https://phantomcat.works` |
-
-## ニュース記事の追加
-
-`web/src/api/data.ts` に記事オブジェクトを追記してください。
-本文 (`content`) は Markdown 形式です。
-
-## SNS
-
-- X (Twitter): [@phantomcatworks](https://x.com/phantomcatworks)
+`web/.env.local` に設定（任意）:
+```
+NEXT_PUBLIC_BASE_URL=https://your-domain.com
+```

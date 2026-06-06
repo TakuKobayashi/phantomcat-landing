@@ -1,6 +1,6 @@
 import Link from "next/link";
-import styles from "./NewsSection.module.css";
 import { newsItems } from "@/lib/news-data";
+import styles from "./NewsSection.module.css";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("ja-JP", {
@@ -24,36 +24,26 @@ export default function NewsSection() {
             <p className="section-eyebrow">News</p>
             <h2 className={`section-title ${styles.title}`}>お知らせ</h2>
           </div>
-          <Link href="/news" className={`btn btn-outline ${styles.viewAll}`}>
+          <Link href="/news/" className={`btn btn-outline ${styles.viewAll}`}>
             すべて見る →
           </Link>
         </div>
-
         {news.length === 0 ? (
           <div className={styles.empty}>
             <p>近日公開予定です。SNSでフォローして最新情報をお見逃しなく！</p>
-            <a
-              href="https://x.com/phantomcatworks"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary"
-            >
+            <a href="https://x.com/phantomcatworks" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
               𝕏 フォロー
             </a>
           </div>
         ) : (
           <div className={styles.list}>
             {news.map((item) => (
-              <Link key={item.slug} href={`/news/${item.slug}`} className={`card ${styles.item}`}>
+              <Link key={item.slug} href={`/news/${item.slug}/`} className={`card ${styles.item}`}>
                 <div className={styles.itemMeta}>
-                  <time className={styles.date} dateTime={item.date}>
-                    {formatDate(item.date)}
-                  </time>
+                  <time className={styles.date} dateTime={item.date}>{formatDate(item.date)}</time>
                   <div className={styles.tags}>
                     {item.tags.map((tag) => (
-                      <span key={tag} className="tag tag-teal">
-                        {tag}
-                      </span>
+                      <span key={tag} className="tag tag-teal">{tag}</span>
                     ))}
                   </div>
                 </div>

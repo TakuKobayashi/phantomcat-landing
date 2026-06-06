@@ -6,7 +6,8 @@ import Footer from "@/components/layout/Footer";
 import { newsItems } from "@/lib/news-data";
 import styles from "./page.module.css";
 
-export async function generateStaticParams() {
+// SSG: ビルド時に全スラッグのHTMLを生成する
+export function generateStaticParams() {
   return newsItems.map((item) => ({ slug: item.slug }));
 }
 
@@ -68,18 +69,14 @@ export default async function NewsArticlePage({
       <Header />
       <main className={styles.main}>
         <div className={`container ${styles.inner}`}>
-          <Link href="/news" className={styles.back}>
-            ← お知らせ一覧へ
-          </Link>
+          <Link href="/news/" className={styles.back}>← お知らせ一覧へ</Link>
           <article className={styles.article}>
             <header className={styles.articleHead}>
               <div className={styles.meta}>
                 <time dateTime={article.date}>{formatDate(article.date)}</time>
                 <div className={styles.tags}>
                   {article.tags.map((tag) => (
-                    <span key={tag} className="tag tag-teal">
-                      {tag}
-                    </span>
+                    <span key={tag} className="tag tag-teal">{tag}</span>
                   ))}
                 </div>
               </div>
@@ -92,7 +89,7 @@ export default async function NewsArticlePage({
           <div className={styles.share}>
             <span className={styles.shareLabel}>Share</span>
             <a
-              href={`https://x.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://phantomcat.works/news/${article.slug}`)}&via=phantomcatworks`}
+              href={`https://x.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://phantomcat.works/news/${article.slug}/`)}&via=phantomcatworks`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-outline"

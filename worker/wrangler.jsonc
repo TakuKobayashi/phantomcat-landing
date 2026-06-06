@@ -1,0 +1,10 @@
+{
+  "name": "phantom-cat",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "../web/out",
+    "binding": "ASSETS"
+  }
+}

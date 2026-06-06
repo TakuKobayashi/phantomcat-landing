@@ -1,33 +1,13 @@
-# Dependencies
 node_modules
 .pnpm-store
-
-# Build outputs
-.next
-dist
-out
-.open-next
-
-# Cloudflare / Wrangler
+web/.next
+web/out
+web/src/lib/news-slugs.json
 .wrangler
 .dev.vars
-
-# Environment
 .env
 .env.local
 .env.*.local
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Editor
-.vscode
-.idea
-*.swp
-*.swo
-
-# Logs
 *.log
-npm-debug.log*
-pnpm-debug.log*

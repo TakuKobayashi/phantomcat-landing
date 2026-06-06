@@ -1,0 +1,17 @@
+{
+  "name": "phantomcat-landing-worker",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "hono": "^4.12.23"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260604.1",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.98.0"
+  }
+}
