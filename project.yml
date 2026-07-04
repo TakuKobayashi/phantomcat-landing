@@ -1,0 +1,16 @@
+name: phantomcat-landing
+slug: phantomcat-landing
+description: A static website for the Night of the Phantom Cat project, built with Next.js and Cloudflare Workers to manage news articles and content generation.
+description_ja: ナイト・オブ・ザ・ファントムキャットプロジェクトの公式ウェブサイト。Next.jsとCloudflare Workersを使用して、ニュース記事やコンテンツ生成を管理しています。
+translation_locked: false
+status: incubating
+repo: git@github.com:TakuKobayashi/phantomcat-landing.git
+tags:
+  - nextjs
+  - cloudflare workers
+  - hono
+  - typescript
+  - static site
+  - website
+  - news
+  - pnpm
